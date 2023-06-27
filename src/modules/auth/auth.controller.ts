@@ -41,9 +41,7 @@ export class AuthController {
       // file,
     );
 
-    return createdUser.toDTO({
-      isActive: true,
-    });
+    return createdUser.toDTO({ isActive: true });
   }
 
   @Post('login')

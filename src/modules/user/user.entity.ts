@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 
 import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
@@ -6,6 +6,7 @@ import { RoleType } from '../../constants';
 import { UseDTO, VirtualColumn } from '../../decorators';
 import type { UserDTOOptions } from './dto/user.dto';
 import { UserDTO } from './dto/user.dto';
+import { UserSettingsEntity } from './user-setting.entity';
 
 export interface IUserEntity extends IAbstractEntity<UserDTO> {
   firstName?: string;
@@ -47,4 +48,7 @@ export class UserEntity
 
   @VirtualColumn()
   fullName?: string;
+
+  @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
+  settings?: UserSettingsEntity;
 }
