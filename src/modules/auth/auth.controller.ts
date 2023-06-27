@@ -1,7 +1,19 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Version,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+import { RoleType } from '../../constants';
+import { AuthUser } from '../../decorators/auth-user.decorator';
+import { Auth } from '../../decorators/http.decorators';
 import { UserDTO } from '../user/dto/user.dto';
+import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
@@ -49,5 +61,14 @@ export class AuthController {
     });
 
     return new LoginPayloadDTO(userEntity.toDTO(), token);
+  }
+
+  @Version('1')
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  @Auth([RoleType.USER, RoleType.ADMIN])
+  @ApiOkResponse({ type: UserDTO, description: 'current user info' })
+  getCurrentUser(@AuthUser() user: UserEntity): UserDTO {
+    return user.toDTO();
   }
 }
