@@ -6,11 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -24,7 +28,6 @@ import { SharedModule } from './shared/shared.module';
         if (!options) {
           throw new Error('Invalid options passed');
         }
-
         return addTransactionalDataSource(new DataSource(options));
       },
     }),

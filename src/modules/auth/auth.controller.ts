@@ -14,11 +14,14 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: UserDTO, description: 'Successfully Registered' })
   // @ApiFile({ name: 'avatar' })
-  async register(
-    @Body() payload: RegisterDTO,
-    // @UploadedFile() file?: IFile
-  ) {
-    const createdUser = await this.userService.createUser(payload);
+  async userRegister(
+    @Body() userRegisterDto: RegisterDTO,
+    // @UploadedFile() file?: IFile,
+  ): Promise<UserDTO> {
+    const createdUser = await this.userService.createUser(
+      userRegisterDto,
+      // file,
+    );
 
     return createdUser.toDTO({
       isActive: true,
