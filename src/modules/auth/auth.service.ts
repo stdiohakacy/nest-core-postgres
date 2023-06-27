@@ -33,15 +33,10 @@ export class AuthService {
     });
   }
 
-  async validateUser(userLoginDto: LoginDTO): Promise<UserEntity> {
-    const user = await this.userService.findOne({
-      email: userLoginDto.email,
-    });
-
-    const isPasswordValid = await validateHash(
-      userLoginDto.password,
-      user?.password,
-    );
+  async validateUser(payload: LoginDTO): Promise<UserEntity> {
+    const { email, password } = payload;
+    const user = await this.userService.findOne({ email });
+    const isPasswordValid = await validateHash(password, user?.password);
 
     if (!isPasswordValid) {
       throw new UserNotFoundException();
