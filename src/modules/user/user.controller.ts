@@ -1,11 +1,12 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
 import { AuthUser } from '../../decorators/auth-user.decorator';
-import { Auth } from '../../decorators/http.decorators';
+import { Auth, UUIDParam } from '../../decorators/http.decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language.interceptor';
 import { TranslationService } from '../../shared/services/translation.service';
+import { UserDTO } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -29,5 +30,17 @@ export class UserController {
     return {
       text: `${translation} ${user.firstName}`,
     };
+  }
+
+  @Get(':id')
+  @Auth([RoleType.USER])
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Get users list',
+    type: UserDTO,
+  })
+  getUser(@UUIDParam('id') userId: Uuid): Promise<UserDTO> {
+    return this.userService.getUser(userId);
   }
 }

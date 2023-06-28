@@ -41,6 +41,7 @@
     "express-ctx": "^0.1.1",
     "express-rate-limit": "^6.7.0",
     "helmet": "^6.0.1",
+    "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "nestjs-i18n": "^10.2.6",
     "passport": "^0.6.0",

@@ -1,6 +1,7 @@
 export * from './auth-user.decorator';
 export * from './field.decorator';
 export * from './http.decorators';
+export * from './property.decorator';
 export * from './public-route.decorator';
 export * from './transform.decorators';
 export * from './translate.decorator';

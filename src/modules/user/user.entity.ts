@@ -1,9 +1,10 @@
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 
 import type { IAbstractEntity } from '../../common/abstract.entity';
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constants';
 import { UseDTO, VirtualColumn } from '../../decorators';
+import { PostEntity } from '../post/post.entity';
 import type { UserDTOOptions } from './dto/user.dto';
 import { UserDTO } from './dto/user.dto';
 import { UserSettingsEntity } from './user-setting.entity';
@@ -51,4 +52,7 @@ export class UserEntity
 
   @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
   settings?: UserSettingsEntity;
+
+  @OneToMany(() => PostEntity, (postEntity) => postEntity.user)
+  posts: PostEntity[];
 }

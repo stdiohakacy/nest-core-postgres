@@ -1,5 +1,8 @@
+import type { PipeTransform, Type } from '@nestjs/common';
 import {
   applyDecorators,
+  Param,
+  ParseUUIDPipe,
   SetMetadata,
   UseGuards,
   UseInterceptors,
@@ -26,4 +29,11 @@ export function Auth(
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),
     PublicRoute(isPublicRoute),
   );
+}
+
+export function UUIDParam(
+  property: string,
+  ...pipes: Array<Type<PipeTransform> | PipeTransform>
+): ParameterDecorator {
+  return Param(property, new ParseUUIDPipe({ version: '4' }), ...pipes);
 }

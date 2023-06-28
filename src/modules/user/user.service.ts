@@ -6,8 +6,10 @@ import type { FindOptionsWhere } from 'typeorm';
 import { Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
+import { UserNotFoundException } from '../../exceptions/user-not-found.exception';
 import { RegisterDTO } from '../auth/dto/register.dto';
 import { CreateSettingCommand } from './command/create-setting.command';
+import type { UserDTO } from './dto/user.dto';
 import { CreateSettingDTO } from './dto/user-setting.dto';
 import { UserEntity } from './user.entity';
 import type { UserSettingsEntity } from './user-setting.entity';
@@ -49,5 +51,18 @@ export class UserService {
     return this.commandBus.execute<CreateSettingCommand, UserSettingsEntity>(
       new CreateSettingCommand(userId, payload),
     );
+  }
+
+  async getUser(id: Uuid): Promise<UserDTO> {
+    const user = await this.userRepo
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    return user.toDTO();
   }
 }

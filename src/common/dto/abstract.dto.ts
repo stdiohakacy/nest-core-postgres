@@ -20,3 +20,9 @@ export class AbstractDTO {
     }
   }
 }
+
+export class AbstractTranslationDTO extends AbstractDTO {
+  constructor(entity: AbstractEntity) {
+    super(entity, { excludeFields: true });
+  }
+}
