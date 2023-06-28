@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import compression from 'compression';
@@ -9,6 +9,7 @@ import morgan from 'morgan';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 
 import { AppModule } from './app.module';
+import { QueryFailedFilter } from './filters/query-failed.filter';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
@@ -32,6 +33,13 @@ export async function bootstrap() {
   app.use(compression());
   app.use(morgan('combined'));
   app.enableVersioning();
+
+  const reflector = app.get(Reflector);
+
+  app.useGlobalFilters(
+    // new HttpExceptionFilter(reflector),
+    new QueryFailedFilter(reflector),
+  );
 
   const configService = app.select(SharedModule).get(ApiConfigService);
 
